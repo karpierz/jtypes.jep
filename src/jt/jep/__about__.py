@@ -9,7 +9,7 @@ __all__ = ('__title__', '__summary__', '__uri__', '__version_info__',
 __title__        = "jtypes.jep"
 __summary__      = "Java Embedded Python (ctypes/cffi-based Jep)"
 __uri__          = "http://pypi.python.org/pypi/jtypes.jep/"
-__version_info__ = type("version_info", (), dict(serial=1,
+__version_info__ = type("version_info", (), dict(serial=2,
                         major=3, minor=7, micro=1, releaselevel="beta"))
 __version__      = "{0.major}.{0.minor}.{0.micro}{1}{2}".format(__version_info__,
                    dict(final="", alpha="a", beta="b", rc="rc")[__version_info__.releaselevel],

@@ -23,7 +23,7 @@ Catching Java exceptions in Python
 If Java code invoked from Python throws an exception of one of a few select types,
 you can catch the exception in Python if desired.  For example:
 
-.. code:: python
+.. code-block:: python
 
    try:
       # throws ClassNotFoundException

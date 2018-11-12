@@ -49,9 +49,9 @@ objects in the Python interpreter.
 
 **Hello World**
 
-.. code:: java
+.. code-block:: java
 
-   try (Jep jep = new Jep(false))
+   try (Jep jep = new Jep())
    {
        jep.eval("from java.lang import System");
        jep.eval("s = 'Hello World'");
@@ -62,15 +62,15 @@ objects in the Python interpreter.
 
 **Calling Python methods from Java and getting results**
 
-.. code:: java
+.. code-block:: java
 
-   try (Jep jep = new Jep(false))
+   try (Jep jep = new Jep())
    {
        jep.eval("import somePyModule");
        // any of the following work, these are just pseudo-examples
 
        // using eval(String) to invoke methods
-       jep.setValue("arg", obj);
+       jep.set("arg", obj);
        jep.eval("x = somePyModule.foo1(arg)");
        Object result1 = jep.getValue("x");
 
@@ -87,20 +87,20 @@ objects in the Python interpreter.
 
 **Calling Java constructors from Python**
 
-.. code:: python
+.. code-block:: python
 
    # importing the java.lang.Class objects
-   from java.lang import Integer
+   from java.util import HashMap
    from java.util import ArrayList as AL
 
    # instantiation
-   x = Integer(5)
-   y = Integer(51)
+   x = HashMap()
+   y = HashMap(100)
    a = AL()
 
 **Calling Java methods from Python**
 
-.. code:: python
+.. code-block:: python
 
    from java.util import ArrayList, HashMap
 

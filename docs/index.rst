@@ -1,17 +1,23 @@
 jtypes.jep documentation
 ========================
 
-.. include:: README.rst
-
-Parts of the documentation
-==========================
-
 .. toctree::
    :maxdepth: 2
+   :caption: Contents:
 
-   Home.rst
-
-   CHANGES.rst
+   README
+   FAQ
+   Getting-Started
+   Interactive-Console
+   How-Jep-Works
+   Exception-Handling
+   Numpy-Usage
+   Naming-Conflicts
+   Performance-Considerations
+   Jep-and-the-GIL
+   Operating-System-Specifics
+   Workarounds-for-CPython-Extensions
+   CHANGES
 
 Indices and tables
 ==================

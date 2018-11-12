@@ -2,15 +2,13 @@
 # Licensed under the zlib/libpng License
 # http://opensource.org/licenses/zlib
 
-from __future__ import absolute_import
-
 from ...jvm.lib.compat import *
 from ...jvm.lib import annotate
 from ...jvm.lib import public
 from ...jvm.lib import cached
 
-from ...jvm       import EJavaType
-from ...jvm       import EJavaModifiers
+from ._constants  import EJavaType
+from ._constants  import EJavaModifiers
 from ._constants  import EMatchType
 from ._jobject    import PyJObject
 from ._exceptions import TypeError
@@ -40,13 +38,13 @@ class PyJField(obj):
     @cached
     def __init(self):
 
-        type_handler = self.__jfield.jvm.type_handler
+        type_manager = self.__jfield.jvm.type_manager
         mods = self.__jfield.getModifiers()
         self.__is_static = EJavaModifiers.STATIC in mods
-        self.__thandler  = type_handler.get_handler(self.__jfield.getType())
+        self.__thandler  = type_manager.get_handler(self.__jfield.getType())
 
     @annotate(this=PyJObject)
-    def __get(self, this, cls):
+    def __get__(self, this, cls):
 
         self.__init()
 
@@ -63,9 +61,9 @@ class PyJField(obj):
             return self.__thandler.getInstance(self.__jfield, this.__javaobject__)
 
     @annotate(this=PyJObject)
-    def __set(self, this, value):
+    def __set__(self, this, value):
 
-        from ..__config__ import WITH_VALID
+        from ..__config__ import config
 
         self.__init()
 
@@ -76,7 +74,10 @@ class PyJField(obj):
             raise TypeError("Unknown field type {}.".format(
                             util.to_jep_jtype(self.__thandler.javaType)))
 
-        if self.__thandler.match(value) <= EMatchType.EXPLICIT: # <AK> added
+        from . import _typehandler as self__thandler
+
+      #if self.__thandler.match(value) <= EMatchType.EXPLICIT: # <AK> added
+        if self__thandler.match(value, self.__jfield.getType()) <= EMatchType.EXPLICIT: # <AK> added
             msg = {EJavaType.SHORT:  "int",
                    EJavaType.FLOAT:  "float (jfloat)",
                    EJavaType.DOUBLE: "float (jdouble)",
@@ -85,7 +86,7 @@ class PyJField(obj):
                    EJavaType.CLASS:  "class"}
             raise TypeError("Expected {}.".format(msg.get(self.__thandler.javaType,
                                                           self.__thandler.getClassName())))
-        if WITH_VALID and not self.__thandler.valid(value):
+        if config.getboolean("WITH_VALID", False) and not self.__thandler.valid(value):
             raise ValueError("Assigned value is not valid for required field type.")
 
         if self.__is_static:
@@ -103,6 +104,3 @@ class PyConstJField(PyJField):
     def __delete__(self, this):
 
         raise AttributeError("Field is undeletable")
-
-
-# eof

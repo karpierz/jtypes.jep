@@ -11,7 +11,7 @@ is the same as a python keyword. For example, in python 2, ``print`` is a keywor
 so the python interpreter will not allow object attributes named ``print`` so the following
 code will not work as expected:
 
-.. code:: python
+.. code-block:: python
 
    from java.lang import System
    System.out.print("Hello")
@@ -19,7 +19,7 @@ code will not work as expected:
 You can work around this limitation by using ``getattr`` to access the ``print`` method
 like this:
 
-.. code:: python
+.. code-block:: python
 
    from java.lang import System
    getattr(System.out, "print")("Hello")

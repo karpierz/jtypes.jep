@@ -22,12 +22,12 @@ other modules work correctly in a multi-threaded, embedded, sub-interpreter envi
 Workarounds
 ===========
 
-In the meantime, there are workarounds when using *jtypes.jep* that can potentially enable
-an application to use the functionality of the CPython extension while dodging errors:
+There are workarounds when using *jtypes.jep* that can potentially enable an application
+to use the functionality of the CPython extension while dodging errors:
 
-#. Pay attention to the thread warnings that *jtypes.jep* may print out at construction and
-   close time if you reuse a thread or use the wrong thread. Those warnings are there for
-   just these kinds of situations.
+#. Use SharedInterpreter rather than a plain *jtypes.jep* instance.
+   Shared interpreters avoids the use of sub-interpreters so it is more like the environment
+   that extensions are usually tested with.
 #. Include the CPython extension in the set of shared modules when you create a Jep instance.
    This solves problems that can arise if the extension is initialized more than once.
 #. Use a singleton Jep instance.  This prevents other sub-interpreters in the same process

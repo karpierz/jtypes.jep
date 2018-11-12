@@ -8,7 +8,7 @@ from ...jvm.lib import public
 
 from ._jobject import PyJObject
 
-from .._java import java_lang_AutoCloseable_close
+from .._java import AutoCloseable_close
 
 
 @public
@@ -36,7 +36,4 @@ class PyJAutoCloseable(PyJObject):
         # java.lang.AutoCloseable.close().
 
         del exc_info
-        java_lang_AutoCloseable_close(self.__javaobject__)
-
-
-# eof
+        AutoCloseable_close(self.__javaobject__)

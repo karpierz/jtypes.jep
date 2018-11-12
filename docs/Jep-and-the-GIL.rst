@@ -53,9 +53,6 @@ It depends on the specific scenario.
   that release the GIL, you may suffer performance degradation.
 * If you're somewhere in the middle (like most), you will hopefully not notice the GIL
   affecting performance, but it is something to keep in mind if performance becomes an issue.
-* If you ignore the *jtypes.jep* warnings about thread safety on Jep instantation and close()
-  and your Python code is using a CPython extension, the CPython extension may deadlock
-  (depends on the extension's code).
 
 How can I work around GIL performance issues?
 =============================================
@@ -66,6 +63,8 @@ There's a lot of ways to approach this problem depending on the scenario.
   If you're using a CPython extension, verify in the extension's code that any
   C libraries or methods which are not using the CPython API are releasing the GIL.
   (This is presuming the extension is safely written for multithreading).
+  If the extension is not releasing the GIL and could be, consider contributing to
+  open source by notifying the developers of the extension or submitting code to them.
 * Port some Python code to Java.
   If some of the code does not need to be in Python, you can port it to Java, call
   the new Java method from Python, and get boosted performance.  This has two benefits.

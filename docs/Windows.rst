@@ -126,7 +126,8 @@ were built with Microsoft Visual C++ 2015 Build Tools, Microsoft Visual Studio 2
 or Microsoft Visual Visual Studio 2017, so you should build Jep with one of those.
 The compiler is freely available and also known as MSVC 14.0.
 You will need to download and install it, the easiest one to use is
-Microsoft Visual C++ 2015 Build Tools.  Here is a download link:
+Microsoft Visual C++ 2015 Build Tools.  Here are some download links:
+* https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=15
 * http://landinghub.visualstudio.com/visual-cpp-build-tools
 
 Note we have not tried building 32-bit Jep on Windows with Python 3.5 and 3.6.

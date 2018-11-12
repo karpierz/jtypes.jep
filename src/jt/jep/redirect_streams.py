@@ -56,6 +56,3 @@ def setup():
 
     sys.stdout = StdOutToJava()
     sys.stderr = StdErrToJava()
-
-
-# eof

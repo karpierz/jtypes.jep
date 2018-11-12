@@ -132,6 +132,18 @@ class PyJNumber(PyJObject):
 
         return _java_number_to_python(self) >= _to_python_number(other)
 
+    def __hash__(self):
+
+        if isinstance(self, PyJNumber):
+            try:
+                self_num = _java_number_to_python(self)
+            except:
+                return -1
+            else:
+                return hash(self_num)
+        else:
+            return hash(self)
+
 
 @annotate(Union[int, long, float, numbers.Number])
 def _to_python_number(var):
@@ -186,6 +198,3 @@ def _java_number_to_python_float(jnumber):
     jnumber_jobj = jnumber.__javaobject__
 
     return jnumber_jobj.doubleValue()
-
-
-# eof

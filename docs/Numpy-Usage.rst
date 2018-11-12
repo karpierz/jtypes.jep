@@ -15,7 +15,7 @@ the dimensions argument, but in memory it must be one dimensional.
 Sending a Java primitive array into Python as a ``numpy.ndarray`` is easy using
 the class ``jep.NDArray``.  For example:
 
-.. code:: java
+.. code-block:: java
 
    try (Jep jep = new Jep(new JepConfig().addSharedModules("numpy"))
    {
@@ -28,7 +28,7 @@ Inside the interpreter, the variable named x will be a ``numpy.ndarray`` with
 shape (3,2) and dtype float32.  If a Java method signature contains an ``NDArray``,
 it will also be transformed when crossing between the languages.  For example:
 
-.. code:: java
+.. code-block:: java
 
    /**
     * If Python invokes this method, it will receive back a numpy.ndarray.
@@ -39,7 +39,7 @@ it will also be transformed when crossing between the languages.  For example:
        return new NDArray(this.rawdata, this.rawdata.length);
    }
 
-.. code:: java
+.. code-block:: java
 
    /**
     * If Python invokes this method, it should pass in a numpy.ndarray.
@@ -53,7 +53,7 @@ it will also be transformed when crossing between the languages.  For example:
 At times *jtypes.jep* will convert a ``numpy.ndarray`` into a Java primitive array when
 the class ``NDArray`` does not fit a method signature.  For example,
 
-.. code:: java
+.. code-block:: java
 
    public void setFloatData(float[] dataFromPython)
    {
@@ -66,33 +66,50 @@ In this scenario the information about the ndarray dimensions will not be sent a
 Direct memory support
 =====================
 
-*jtypes.jep* does not support direct memory sharing between numpy and Java, therefore
-changes in the array in one language are **not** reflected in the array in the other
-language. Currently all numpy <-> Java operations are completed with a memcpy().
-(*Direct memory is coming soon, it is available in the dev_3.7 branch*).
+When using an NDArray the memory is not shared between numpy and Java, therefore changes
+in the array in one language are **not** reflected in the array in the other language.
+Since *jtypes.jep* 3.7 it is possible to use a DirectNDArray which can be created from a
+Java NIO buffer object. The Java buffer and the Python ndarray will both use the same memory
+meaning any changes in one language are immediately visible in the other. For example,
+
+.. code-block:: java
+
+   try (Jep jep = new Jep())
+   {
+       FloatBuffer data = ByteBuffer.allocateDirect(6*4).asFloatBuffer();
+       DirectNDArray<FloatBuffer> nd = new DirectNDArray<>(data, 6);
+       jep.set("x", nd);
+       jep.eval("x[1] = 700");
+       // val will 700 since we set it in python
+       float val = data.get(1);
+       data.put(4, val + 100);
+       // prints 800 since we set in java
+       jep.eval("print(x[4])");
+   }
 
 Numpy gotchas
 =============
 
-Numpy currently does not support running in an embedded interpreter, though it mostly
-works. You can use the shared modules capability of *jtypes.jep* to work around the known issues.
+Numpy currently does not support running in an embedded interpreter, though it mostly works.
+You can use the shared modules capability of *jtypes.jep* to work around the known issues.
+You can use the shared interpreter capability to work around the known issues.
 
 Known issues:
 
 * `~~Closing a Jep instance/sub-interpreter breaks some numpy methods~~
   <https://github.com/ninia/jep/issues/28>`__.
   This is the infamous *'NoneType' object is not callable* error.
-  You can work around this by using the shared modules capability,
-  or by never disposing a Jep sub-interpreter that has imported numpy.
+  You can work around this by using the shared modules capability, using the
+  shared interpreter capability, or by never disposing a Jep sub-interpreter
+  that has imported numpy.
 
 * `Printing arrays sometimes fails <https://github.com/numpy/numpy/issues/3961>`__.
-  Like the above issue, you can work around it by using shared modules
-  or never disposing a Jep sub-interpreter that has imported numpy.
+  Like the above issue, you can work around it by using shared modules, shared
+  interpreters, or never disposing a Jep sub-interpreter that has imported numpy.
 
 * `Floating point errors can deadlock <https://github.com/numpy/numpy/issues/5856>`__.
-  You should not be able to get this error if you do not have two active
-  Jep sub-interpreters on the same thread at the same time.
-  *jtypes.jep* will explicitly warn you about unsafe threading in this scenario.
+  You should not be able to get this error.
+  *jtypes.jep* will throw a JepException about unsafe threading in this scenario.
 
 * `Tiny memory leak <https://github.com/numpy/numpy/issues/5857>`__.
   The leak, if it still exists in current versions of numpy, is tiny.

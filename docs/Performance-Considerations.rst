@@ -17,24 +17,24 @@ you can use to ensure this doesn't happen.  In no particular order:
   temporarily in local scope.  The Python garbage collector will take care of variables
   after they go out of scope.  For example:
 
-.. code:: python
+.. code-block:: python
 
    def foo():
        args = get_args()
        values = pre_process(args)
        doMath(values)
 
-.. code:: java
+.. code-block:: java
 
    jep.eval("foo()");
 
 where foo() does all the work.
 args and values will go out of scope and be automatically cleaned up.
 
-* Delete any variables created by ``jep.setValue(String name, Object var);`` once you are
+* Delete any variables created by ``jep.set(String name, Object var);`` once you are
   done with them.  For example:
 
-.. code:: java
+.. code-block:: java
 
    jep.set("x", javaObj);
    jep.eval("result = foo(x)");
@@ -44,7 +44,7 @@ args and values will go out of scope and be automatically cleaned up.
 
 You can also shortcut this with Python code like:
 
-.. code:: python
+.. code-block:: python
 
    for g in globals():
       if some_condition(g):
@@ -52,12 +52,12 @@ You can also shortcut this with Python code like:
 
 * Close the Jep interpreters when you are done with them.  For example:
 
-.. code:: java
+.. code-block:: java
 
    Jep jep = null;
    try
    {
-       jep = new Jep(false);
+       jep = new Jep();
        // runScript, invoke, eval, and other fun things
    } finally {
        if (jep != null) {
@@ -67,9 +67,9 @@ You can also shortcut this with Python code like:
 
 With Java 7 it's even easier:
 
-.. code:: java
+.. code-block:: java
 
-   try (Jep jep = new Jep(false))
+   try (Jep jep = new Jep())
    {
       // runScript, invoke, eval, and other fun things
    }

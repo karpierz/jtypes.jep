@@ -11,9 +11,9 @@ launching *jtypes.jep* easier. The jep script is very similar to running ``pytho
 from a terminal/command line.  If run with an argument of a file path, it will run
 the script at that path.  If run with no arguments, it will provide an
 interactive console that combines the Python language with access to Java
-classes on the classpath.
+classes on the classpath and in the JRE.
 
-.. code:: python
+.. code-block:: python
 
    $ jep
    >>> from java.lang import System

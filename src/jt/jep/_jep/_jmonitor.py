@@ -28,7 +28,7 @@ class PyJMonitor(object):
         self = super(PyJMonitor, cls).__new__(cls)
         self.__javaobject__ = jobject
         with self.__javaobject__.jvm as (jvm, jenv):
-            # the object to lock on, e.g. synchronized(lock) {code}
+            # the object to lock on, e.g. synchronized(lock) { code }
             self.__lock = jenv.NewGlobalRef(self.__javaobject__.handle)
 
         return self
@@ -69,6 +69,3 @@ class PyJMonitor(object):
         with self.__javaobject__.jvm as (jvm, jenv):
             if jenv.MonitorExit(self.__lock) < 0:
                 raise Exception("??? !!!")
-
-
-# eof

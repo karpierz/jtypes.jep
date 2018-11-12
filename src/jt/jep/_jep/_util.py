@@ -5,7 +5,7 @@
 from ...jvm.lib.compat import *
 from ...jvm.lib import annotate
 
-from ...jvm import EJavaType
+from ._constants import EJavaType
 
 
 @annotate(EJavaType, jclass='jvm.JClass')
@@ -52,6 +52,3 @@ to_jep_jtype = {
     }
 
 from_jep_jtype = {v: k for k, v in to_jep_jtype.items()}
-
-
-# eof

@@ -63,6 +63,3 @@ class Package(types.ModuleType):
         if class_names:
             result += (cname.split(".")[-1] for cname in class_names)
         return result
-
-
-# eof

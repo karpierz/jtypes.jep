@@ -6,11 +6,19 @@ Frequently Asked Questions
 What Python modules does *jtypes.jep* work with?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* *jtypes.jep* should work with any pure python modules.
-  Unfortunately, CPython extensions and Cython modules may not work correctly,
+* *jtypes.jep* should work with any pure Python modules.
+  CPython extensions and Cython modules may or may not work correctly,
   it depends on how they were coded.  There are various techniques to try and overcome
   some of the complications of CPython extensions, please see the
   :ref:`Workarounds for CPython Extensions <Workarounds-for-CPython-Extensions>` page.
+
+Does Jep work with CPython extension?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* *jtypes.jep* works with a variety of CPython extensions.  Developers have reported that
+  *jtypes.jep* works with **numpy**, **scipy**, **pandas**, **tensorflow**, **matplotlib**,
+  **cvxpy**, and more.
+  Please let us know what other CPython extensions you are using with Jep or update this list.
 
 Is *jtypes.jep* a good fit for my project?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -43,20 +51,6 @@ Is *jtypes.jep* a good fit for my project?
       * `Py4J <https://www.py4j.org/>`__
       * `jpy <https://github.com/bcdev/jpy>`__
 
-Does *jtypes.jep* work on Android?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-* We haven't tried it yet.
-  In theory it should possible, but there may be some challenges to overcome.
-  If you try this, we'd love to hear about it and will gladly accept contributions
-  to make *jtypes.jep* work well on more platforms.
-
-What Java UI frameworks does *jtypes.jep* support?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-* *jtypes.jep* has been run with Swing and SWT.
-  We haven't tried JavaFX yet.
-
 How do I fix Unsatisfied Link Error: no jep in java.library.path?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -67,6 +61,7 @@ How do I fix Unsatisfied Link Error: no jep in java.library.path?
 
   1. Place the shared library where Python has its other shared libraries.
      This is usually python/lib with \*nix systems and python/dlls with Windows systems.
+
   2. Set an environment variable that tells Java the directory of the *jtypes.jep*
      shared library.
 
@@ -77,7 +72,36 @@ How do I fix Unsatisfied Link Error: no jep in java.library.path?
   3. Pass the argument ``-Djava.library.path`` to your Java process with the location of the
      *jtypes.jep* shared library.
 
+  4. *jtypes.jep* will try harder to find the native library for you if you set the PYTHONHOME
+     environment variable.
+
 * See http://stackoverflow.com/questions/20038789/default-java-library-path for more information.
+
+Does *jtypes.jep* work on Android?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* We haven't tried it yet.
+  In theory it should possible, but there may be some challenges to overcome.
+  If you try this, we'd love to hear about it and will gladly accept contributions
+  to make *jtypes.jep* work well on more platforms.
+
+Is *jtypes.jep* available through Maven?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* The jars are available through Maven, the native library is not.
+  Look at the `pom.xml <https://github.com/ninia/jep/blob/master/pom.xml>`__ file
+  to find the groupId is black.ninia and the artifactId is jep.
+
+What Java UI frameworks does *jtypes.jep* support?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* *jtypes.jep* has been run with Swing and SWT.
+  We haven't tried JavaFX yet.
+
+Does *jtypes.jep* work with OSGi?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* Yes.
 
 Why does ``eval(String)`` return a boolean instead of an Object of the result?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -92,7 +116,7 @@ Why does ``eval(String)`` return a boolean instead of an Object of the result?
 * ``getValue(String)`` is almost identical in the C code to ``eval(String)`` and will return
   the result of the evaluation, and can be used instead of eval where desired. For example:
 
-.. code:: java
+.. code-block:: java
 
    // evaluates and discards the result
    jep.eval("2 + 4");
@@ -107,7 +131,7 @@ Why does ``eval(String)`` return a boolean instead of an Object of the result?
 How do I fix Fatal Python Error when *jtypes.jep* starts up?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* If you see fatal python errors when first using *jtypes.jep*, that often implies the
+* If you see fatal Python errors when first using *jtypes.jep*, that often implies the
   ``PATH`` or ``LD_LIBRARY_PATH`` environment variables are incorrect or inconsistent.
   This is often seen if multiple versions of python are installed and/or *jtypes.jep*
   was built with a different version of Python than it is running with.
@@ -121,6 +145,8 @@ Does *jtypes.jep* work with alternative Python distributions such as Anaconda, P
   www.python.org is used in development and testing. The default Python on most \*nix variants
   is almost always a compatible CPython build.
 
+  * Many Jep users have reported *jtypes.jep* works with Anaconda.
+
 * Other versions of Python may work but they do not receive routine testing and they may require
   additional effort to ensure that the correct versions of all native libraries can be loaded.
   If you are having trouble you can try Google or the
@@ -128,3 +154,15 @@ Does *jtypes.jep* work with alternative Python distributions such as Anaconda, P
   users with a similar setup. Please do not report errors related to the build or loading of
   libraries on the github issue tracker since it is unlikely that *jtypes.jep* will change
   to support these variants unless you can provide a patch to do so.
+
+Does *jtypes.jep* work with Scala?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* Yes.
+
+Can I start new Python threads from *jtypes.jep*?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* Yes, however there are currently a few limitations
+  1. You must ensure that all Python threads have completed before closing *jtypes.jep*.
+  2. You cannot access Java from any new Python threads.

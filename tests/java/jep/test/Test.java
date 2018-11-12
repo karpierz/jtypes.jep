@@ -7,6 +7,7 @@ import java.util.Arrays;  //<AK>: added
 import java.util.ArrayList;
 
 import jep.Jep;
+import jep.JepConfig;
 import jep.JepException;
 import org.python.core.PyModule;  //<AK> was: jep.python.PyModule;
 
@@ -50,7 +51,8 @@ public class Test implements Runnable {
             try {
                 File pwd = new File(".");
 
-                this.jep = new Jep(this.testEval, pwd.getAbsolutePath());
+                this.jep = new Jep(new JepConfig().setInteractive(this.testEval)
+                        .addIncludePaths(pwd.getAbsolutePath()));
                 jep.set("testb", true);
                 jep.set("testy", 127);
                 jep.set("testi", i);
@@ -89,9 +91,9 @@ public class Test implements Runnable {
                 ad[1] = 1.7976931348623157E308D;
                 jep.set("testad", ad);
 
-                PyModule amod = jep.createModule("amod");
-                amod.set("testab", ab);
-                amod.set("testad", ad);
+                //PyModule amod = jep.createModule("amod");
+                //amod.set("testab", ab);
+                //amod.set("testad", ad);
 
                 if (!this.testEval)
                     jep.runScript("test.py");
@@ -152,8 +154,13 @@ public class Test implements Runnable {
                 break;
             } finally {
                 System.out.println("**** close me");
-                if (jep != null)
-                    jep.close();
+                if (jep != null) {
+                    try {
+                        jep.close();
+                    } catch (JepException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
     }
@@ -299,6 +306,18 @@ public class Test implements Runnable {
 
     public static void callStaticVoid() { return; }
 
+    public String[] testAllVarArgs(String... args){
+        return args;
+    }
+
+    public String[] testMixedVarArgs(String regArg1, String regArg2, String... args){
+        String[] result = new String[args.length + 2];
+        result[0] = regArg1;
+        result[1] = regArg2;
+        System.arraycopy(args, 0, result, 2, args.length);
+        return result;
+    }
+
     public static Object[] test20Args(Object arg1, Object arg2, Object arg3,
             Object arg4, Object arg5, Object arg6, Object arg7, Object arg8,
             Object arg9, Object arg10, Object arg11, Object arg12,
@@ -317,13 +336,20 @@ public class Test implements Runnable {
             public void run() {
                 Jep jep = null;
                 try {
-                    jep = new Jep(true, "", restrictedClassLoader);
+                    JepConfig cfg = new JepConfig().setInteractive(true)
+                            .setClassLoader(restrictedClassLoader);
+                    jep = new Jep(cfg);
                     jep.eval("from java.io import File");
                 } catch (Throwable th) {
                     t[0] = th;
                 } finally {
                     if (jep != null) {
-                        jep.close();
+                        try {
+                            jep.close();
+                        } catch (JepException e) {
+                            throw new RuntimeException(
+                                    "Error closing Jep instance", e);
+                        }
                     }
                     synchronized (Test.class) {
                         Test.class.notify();

@@ -2,6 +2,8 @@ package jep.test;
 
 import jep.Jep;
 import jep.JepConfig;
+import jep.JepException;
+import jep.MainInterpreter;
 import jep.PyConfig;
 
 /**
@@ -22,10 +24,9 @@ import jep.PyConfig;
  */
 public class TestPreInitVariables {
 
-    public static void main(String[] args) {
-        Jep jep = null;
+    public static void main(String[] args) throws JepException {
         PyConfig pyConfig = new PyConfig();
-        pyConfig.setIgnoreEnvironmentFlag(1);
+        //pyConfig.setIgnoreEnvironmentFlag(1);
         // TODO fix test so no site flag can be tested
         // pyConfig.setNoSiteFlag(1);
         pyConfig.setNoUserSiteDirectory(1);
@@ -34,12 +35,11 @@ public class TestPreInitVariables {
         pyConfig.setOptimizeFlag(1);
         pyConfig.setDontWriteBytecodeFlag(1);
         pyConfig.setHashRandomizationFlag(1);
-        try {
-            Jep.setInitParams(pyConfig);
-            jep = new Jep(new JepConfig().addIncludePaths("."));
+        MainInterpreter.setInitParams(pyConfig);
+        try (Jep jep = new Jep(new JepConfig().addIncludePaths("."))) {
             jep.eval("import sys");
-            assert 1 == ((Number) jep.getValue("sys.flags.ignore_environment"))
-                    .intValue();
+            //assert 1 == ((Number) jep.getValue("sys.flags.ignore_environment"))
+            //        .intValue();
             assert 0 == ((Number) jep.getValue("sys.flags.no_site")).intValue();
             assert 1 == ((Number) jep.getValue("sys.flags.no_user_site"))
                     .intValue();
@@ -53,10 +53,6 @@ public class TestPreInitVariables {
         } catch (Throwable e) {
             e.printStackTrace();
             System.exit(1);
-        } finally {
-            if (jep != null) {
-                jep.close();
-            }
         }
         System.exit(0);
     }

@@ -4,15 +4,20 @@ include LICENSE
 include tox.ini
 
 graft src
-exclude src/jt/jep/_java/class2py.py
+prune src/jt/jep/_jep/_typehandler
+include src/jt/jep/_jep/_typehandler/__init__.py
+recursive-exclude src/jt/jep/_java *.java
 
 include bin/jep
 include bin/jep.cmd
 
 graft docs
 prune docs/_build
+recursive-exclude docs *.org *.old *.new
 
 graft tests
+exclude tests/_info_.txt
+recursive-exclude tests *.org *.old *.new
 
 global-exclude .build .build.*
 global-exclude *.py[co] __pycache__

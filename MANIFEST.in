@@ -9,7 +9,7 @@ include src/jt/jep/_jep/_typehandler/__init__.py
 recursive-exclude src/jt/jep/_java *.java
 
 include bin/jep
-include bin/jep.cmd
+include bin/jep.bat
 
 graft docs
 prune docs/_build

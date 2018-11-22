@@ -9,7 +9,7 @@ from ...jvm.lib import public
 @public
 class TypeError(builtins.TypeError, RuntimeError):
 
-    """ """
+    __doc__ = builtins.TypeError.__doc__
 
 @public
 class NoMatchingOverload(builtins.TypeError, RuntimeError):

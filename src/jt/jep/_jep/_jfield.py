@@ -74,10 +74,11 @@ class PyJField(obj):
             raise TypeError("Unknown field type {}.".format(
                             util.to_jep_jtype(self.__thandler.javaType)))
 
-        from . import _typehandler as self__thandler
+        from ._typehandler.__init import get_handler
+        self__thandler = get_handler(self.__jfield.getType())
 
       #if self.__thandler.match(value) <= EMatchType.EXPLICIT: # <AK> added
-        if self__thandler.match(value, self.__jfield.getType()) <= EMatchType.EXPLICIT: # <AK> added
+        if self__thandler.match(value) <  EMatchType.EXPLICIT: # <AK> added
             msg = {EJavaType.SHORT:  "int",
                    EJavaType.FLOAT:  "float (jfloat)",
                    EJavaType.DOUBLE: "float (jdouble)",

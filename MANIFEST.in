@@ -4,9 +4,18 @@ include LICENSE
 include tox.ini
 
 graft src
+prune src/jt/jep/_jep_master
 prune src/jt/jep/_jep/_typehandler
 include src/jt/jep/_jep/_typehandler/__init__.py
-recursive-exclude src/jt/jep/_java *.java
+exclude src/jt/jep/_java/__init.py
+exclude src/jt/jep/_java/embed.py
+exclude src/jt/jep/_java/jnijep.py
+recursive-exclude src/jt/jep/_java *.java_
+recursive-exclude src/jt/jep/_java *.java_master
+exclude src/jt/jep/_java/jep/AbstractNDArray.*
+exclude src/jt/jep/_java/jep/DirectNDArray.*
+exclude src/jt/jep/_java/jep/NDArray.*
+exclude src/jt/jep/_java/jep/reflect/ProxyHandler.*
 
 include bin/jep
 include bin/jep.bat
@@ -18,6 +27,9 @@ recursive-exclude docs *.org *.old *.new
 graft tests
 exclude tests/_info_.txt
 recursive-exclude tests *.org *.old *.new
+prune tests/python/!master
+prune tests/python/!master-old
+prune tests/python/old
 
 global-exclude .build .build.*
 global-exclude *.py[co] __pycache__

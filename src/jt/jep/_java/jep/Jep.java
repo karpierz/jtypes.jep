@@ -254,7 +254,7 @@ public class Jep extends PythonInterpreter
     {
         try
         {
-            byte[]     barr = super.getByteArray(name);
+            byte[] barr = super.getByteArray(name);
             ByteBuffer bbuf = ByteBuffer.wrap(barr).order(ByteOrder.nativeOrder());
             return bbuf.asFloatBuffer().array();
         }

@@ -1,7 +1,7 @@
 Changelog
 =========
 
-3.8.2a1 (2018-11-08)
+3.8.2a2 (2018-11-08)
 --------------------
 - Synchro with pyjnius master branch.
 - Update of the required setuptools version.

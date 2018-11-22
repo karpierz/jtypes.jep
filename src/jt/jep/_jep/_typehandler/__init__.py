@@ -15,5 +15,3 @@ from .string_handler  import *  # noqa
 from .class_handler   import *  # noqa
 from .object_handler  import *  # noqa
 from .array_handler   import *  # noqa
-
-from .__init import match
